@@ -22,6 +22,9 @@ The bot log the errors into one specified channel
 The bot scan all currently running docker containers at the start and try to find a container name specified by matching
 - `DOCKER_CONTAINERS` An array json who contains regex or string
 
+### Logs
+- `LOGS_LINE_NB` The number of lines stored before an error
+
 ## 👨‍💻 Development
 ```bash
 npm run dev

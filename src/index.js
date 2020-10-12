@@ -11,12 +11,19 @@ dotenv.config();
 let guildLog = null;
 let channelLog = null;
 
+let logsList = new Array();
+
 // When a container emmits log
 function onLog(containerInfo, logs) {
+    // Insert log into list
+    logsList.push(logs);
+    if (logsList.length > getenv('LOGS_LINE_NB')) {
+        logsList = logsList.slice(1);
+    }
     const containerName = containerInfo.Names.map(name => '`' + name + '`').join(', ');
     channelLog.send(':x: **Error on ' +
         getenv('APP_NAME') + '**\n\n:ballot_box: __Containers__: ' + containerName +
-        '\n\n:pen_ballpoint: __Logs__:```' + logs + '```')
+        '\n\n:pen_ballpoint: __Logs__:```' + logsList.join('\n') + '```')
     .catch(() => {
        console.log(`Unable to write in ${channelLog.name} ! Missing access`);
     });
@@ -43,7 +50,7 @@ function bindContainer(containerInfo) {
 // Pull containers info list
 function getContainers() {
     const filters = JSON.parse(getenv('DOCKER_CONTAINERS'));
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
         docker.listContainers()
         .then(containers => {
             resolve(
