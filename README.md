@@ -1,4 +1,4 @@
-# Docker logger
+# Docker Discord logger
 
 ## 🔧 Install
 ```bash
