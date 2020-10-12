@@ -1,0 +1,21 @@
+{
+  "name": "yabelog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon"
+  },
+  "author": "Gabriel Hamel",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "discord.js": "^12.3.1",
+    "dockerode": "^3.2.1",
+    "dotenv": "^8.2.0",
+    "getenv": "^1.0.0"
+  }
+}
