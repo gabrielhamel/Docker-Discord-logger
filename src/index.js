@@ -77,7 +77,7 @@ client.on('ready', () => {
         console.error('Unable to find the discord server specified in environment');
     } else if (guildLog && channelLog === null) {
         console.error('Unable to find the discord channel specified in environment');
-    } else if (channel.type !== "text") {
+    } else if (channelLog.type !== "text") {
         console.error('This channel isn\'t a text channel');
     } else {
         getContainers()
