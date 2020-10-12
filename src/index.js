@@ -13,9 +13,10 @@ let channelLog = null;
 
 // When a container emmits log
 function onLog(containerInfo, logs) {
-    logs = logs.replace(/[^\x00-\x7F]/g, ''); // Remove non printable char
-    const containerName = containerInfo.Names.join(', ');
-    channelLog.send(':x: **Error on ' + containerName + '**\n:pen_ballpoint: __Logs__:```' + logs + '```')
+    const containerName = containerInfo.Names.map(name => '`' + name + '`').join(', ');
+    channelLog.send(':x: **Error on ' +
+        getenv('APP_NAME') + '**\n\n:ballot_box: __Containers__: ' + containerName +
+        '\n\n:pen_ballpoint: __Logs__:```' + logs + '```')
     .catch(() => {
        console.log(`Unable to write in ${channelLog.name} ! Missing access`);
     });
