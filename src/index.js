@@ -24,6 +24,7 @@ function onLog(containerInfo, logs) {
 
 // Bind stream of a container
 function bindContainer(containerInfo) {
+    console.log('Binding "' + containerInfo.Names.join(', ') + '" container');
     const container = docker.getContainer(containerInfo.Id);
     container.attach({
         stream: true,
@@ -41,14 +42,16 @@ function bindContainer(containerInfo) {
 
 // Pull containers info list
 function getContainers() {
-    const containerFilterName = /^\/graph-api-server-.{1,}/gm;
+    const filters = JSON.parse(getenv('DOCKER_CONTAINERS'));
     return new Promise((resolve, reject) => {
         docker.listContainers()
         .then(containers => {
             resolve(
                 containers.filter(container =>
                     container.Names.filter(name =>
-                        containerFilterName.exec(name)
+                        filters.filter(filter =>
+                            name.match(filter)
+                        ).length
                     ).length
                 )
             );
@@ -74,10 +77,13 @@ client.on('ready', () => {
         console.error('Unable to find the discord server specified in environment');
     } else if (guildLog && channelLog === null) {
         console.error('Unable to find the discord channel specified in environment');
+    } else if (channel.type !== "text") {
+        console.error('This channel isn\'t a text channel');
+    } else {
+        getContainers()
+        .then(containersInfo => containersInfo.forEach(containerInfo => bindContainer(containerInfo)))
+        .catch(err => console.error(err));
     }
-    getContainers()
-    .then(containersInfo => containersInfo.forEach(containerInfo => bindContainer(containerInfo)))
-    .catch(err => console.error(err))
 });
 
 client.login(getenv('DISCORD_CLIENT_TOKEN'));
