@@ -10,8 +10,9 @@ dotenv.config();
 
 let guildLog = null;
 let channelLog = null;
-
 let logsList = new Array();
+
+const logsRegex = JSON.parse(getenv('LOGS_REGEX'));
 
 function createLogFile(logs) {
     const buffer = Buffer.from(logs);
@@ -25,6 +26,13 @@ function onLog(containerInfo, logs) {
     logsList.push(logs);
     if (logsList.length > getenv('LOGS_LINE_NB')) {
         logsList = logsList.slice(1);
+    }
+
+    // Check if current log match with regex
+    if (logsRegex.filter(filter =>
+        logs.match(filter)
+    ).length === 0) {
+        return;
     }
     const concatedLogs = logsList.join('\n');
     const containerName = containerInfo.Names.map(name => '`' + name + '`').join(', ');
