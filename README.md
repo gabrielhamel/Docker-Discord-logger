@@ -35,3 +35,11 @@ npm run dev
 ```bash
 npm start
 ```
+You can run this script into docker himself by passing the socket into a volume
+```bash
+# Build
+docker build -t username/discord-docker-logger .
+
+# Run
+docker run -v /var/run/docker.sock:/var/run/docker.sock --env-file .env username/discord-docker-logger:latest
+```
