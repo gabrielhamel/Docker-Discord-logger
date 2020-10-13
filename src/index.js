@@ -13,6 +13,12 @@ let channelLog = null;
 
 let logsList = new Array();
 
+function createLogFile(logs) {
+    const buffer = Buffer.from(logs);
+    const file = new Discord.MessageAttachment(buffer, 'logs.txt');
+    return file;
+}
+
 // When a container emmits log
 function onLog(containerInfo, logs) {
     // Insert log into list
@@ -20,10 +26,13 @@ function onLog(containerInfo, logs) {
     if (logsList.length > getenv('LOGS_LINE_NB')) {
         logsList = logsList.slice(1);
     }
+    const concatedLogs = logsList.join('\n');
     const containerName = containerInfo.Names.map(name => '`' + name + '`').join(', ');
-    channelLog.send(':x: **Error on ' +
-        getenv('APP_NAME') + '**\n\n:ballot_box: __Containers__: ' + containerName +
-        '\n\n:pen_ballpoint: __Logs__:```' + logsList.join('\n') + '```')
+    let message = ':x: **Error on ' +
+                    getenv('APP_NAME') + '**\n\n:ballot_box: __Containers__: ' + containerName +
+                    '\n\n:pen_ballpoint: __Logs__:```' + '```\n:printer: __File__:';
+    message = message.replace('``````', '```' + concatedLogs.slice(concatedLogs.length - 2000 + message.length) + '```');
+    channelLog.send(message, createLogFile(concatedLogs))
     .catch(err => {
        console.log(`Unable to write in ${channelLog.name} ! ${err.message}`);
     });
