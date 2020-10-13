@@ -13,10 +13,11 @@ let channelLog = null;
 let logsList = new Array();
 
 const logsRegex = JSON.parse(getenv('LOGS_REGEX'));
+const appName = getenv('APP_NAME');
 
 function createLogFile(logs) {
     const buffer = Buffer.from(logs);
-    const file = new Discord.MessageAttachment(buffer, 'logs.txt');
+    const file = new Discord.MessageAttachment(buffer, `Logs-${appName}-${new Date().toISOString()}.txt`);
     return file;
 }
 
@@ -37,8 +38,9 @@ function onLog(containerInfo, logs) {
     const concatedLogs = logsList.join('\n');
     const containerName = containerInfo.Names.map(name => '`' + name + '`').join(', ');
     let message = ':x: **Error on ' +
-                    getenv('APP_NAME') + '**\n\n:ballot_box: __Containers__: ' + containerName +
-                    '\n\n:pen_ballpoint: __Logs__:```' + '```\n:printer: __File__:';
+                    appName + '**\n\n:ballot_box: __Container__ `' +
+                    containerInfo.Id + '`: ' + containerName +
+                    '\n\n:pen_ballpoint: __Logs__:``````\n:printer: __File__:';
     message = message.replace('``````', '```' + concatedLogs.slice(concatedLogs.length - 2000 + message.length) + '```');
     channelLog.send(message, createLogFile(concatedLogs))
     .catch(err => {
