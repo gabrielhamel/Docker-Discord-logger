@@ -24,6 +24,7 @@ The bot scan all currently running docker containers at the start and try to fin
 
 ### Logs
 - `LOGS_LINE_NB` The number of lines stored before an error
+- `LOGS_REGEX` The pattern matching to trigger a discord message
 
 ## 👨‍💻 Development
 ```bash
