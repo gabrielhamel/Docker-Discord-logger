@@ -1,5 +1,9 @@
 # Docker Discord logger
 
+Log  docker errors container on channel discord
+
+![](doc/example.png)
+
 ## 🔧 Install
 ```bash
 npm i
